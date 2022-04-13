@@ -42,7 +42,9 @@ _console.switch.addEventListener("click", () => {
 	_data.gameSequence = [];
 	_data.playerSequence = [];
 
-	disablePads()
+	disablePads();
+	changePadCursor("auto");
+
 	_console.led.classList.remove("console_led--active")
 });
 
@@ -57,7 +59,33 @@ _console.start.addEventListener("click", () => {
 });
 
 const padListener = (e) => {
+	if(!_data.playerCanPlay)
+	return
+	let soundId;
+	_console.pads.forEach((pad, key) => {
+		if(pad === e.target)
+			soundId = key
+	})
+	e.target.classList.add("game_pad--active");
 
+	_data.sounds[soundId].play();
+	_data.playerSequence.push(soundId);
+
+	setTimeout(() => {
+		e.target.classList.remove("game_pad--active");
+	
+		const currentMove = _data.playerSequence.length - 1;
+	
+		if (_data.playerSequence[currentMove] !== _data.gameSequence[currentMove]){
+			_data.playerCanPlay = false;
+			disablePads();
+			resetOrPlayAgain();
+		} else if(currentMove === _data.gameSequence.length - 1) {
+			newColor();
+			playSequence();
+		}
+		waitForPlayerClick();		
+	}, 250)
 }
 
 _console.pads.forEach(pad => {
@@ -91,6 +119,8 @@ const playSequence = () => {
 	_data.playerSequence = [];
 	_data.playerCanPlay = false;
 
+	changePadCursor("auto");
+
 	const interval = setInterval(() => {
 		if(!_data.gameOn){
 			clearInterval(interval);
@@ -102,6 +132,7 @@ const playSequence = () => {
 				clearInterval(interval);
 				disablePads();
 				waitForPlayerClick();
+				changePadCursor("pointer");
 				_data.playerCanPlay = true;
 				return
 			}
@@ -152,16 +183,31 @@ const waitForPlayerClick = () => {
 			return
 	
 		disablePads();
-		playSequence();
+		resetOrPlayAgain();
 	}, 5000)
 }
 
 const resetOrPlayAgain = () => {
+	_data.playerCanPlay = false;
 
+	if(_data.strict){
+		blink("!!", () => {
+			_data.score = 0;
+			_data.gameSequence = [];
+			startGame()
+		})
+	} else {
+		blink("!!", () => {
+			setScore();
+			playSequence()
+		})
+	}
 }
 
 const changePadCursor = (cursorType) => {
-
+	_console.pads.forEach(pad => {
+		pad.style.cursor = cursorType
+	})
 }
 
 const disablePads = () => {

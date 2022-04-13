@@ -34,7 +34,7 @@ html {
 }
 
 body {
-	background-image: url('http://cdn.backgroundhost.com/backgrounds/subtlepatterns/retina_wood.png');
+	background-image: url('/images/pattern_wood.jpg');
 	font-family: "Bungee", Verdana, sans-serif;
 }
 
@@ -239,4 +239,11 @@ body {
 footer {
 	text-align: center;
 	margin-top: 5rem;
+	font-size: 1rem;
+}
+
+@media (max-width: 600px){
+	html {
+		font-size: 45%;
+	}
 }
