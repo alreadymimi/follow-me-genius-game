@@ -71,6 +71,7 @@ body {
 .game_pad {
 	width: calc(var(--game-size) / 2);
 	height: calc(var(--game-size) / 2);
+	border: var(--game-border);
 }
 
 .blue {
