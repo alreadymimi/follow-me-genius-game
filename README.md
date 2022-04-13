@@ -4,7 +4,7 @@ FOLLOW ME GAME
 
 FOLLOW ME é um console semelhante ao Genius. Genius era um brinquedo da Estrela, muito popular na década de 1980. O brinquedo possuía botões coloridos que emitiam sons harmônicos e se iluminavam em sequência. Cabia aos jogadores repetir o processo sem errar. 
 
-Jogue aqui:
+Jogue aqui: https://alreadymimi.github.io/follow-me-genius-game/
 
 ![follow-me_alreadymimi](https://user-images.githubusercontent.com/95764446/163245968-f461fa23-d18b-4f87-988d-a9d1aa6d6e0b.gif)
 
