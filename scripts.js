@@ -20,10 +20,10 @@ const _console = {
 }
 
 const _soundUrls = [
-	"audio/simonSound1.mp3",
-	"audio/simonSound2.mp3",
-	"audio/simonSound3.mp3",
-	"audio/simonSound4.mp3"
+	"audio/Sound1.mp3",
+	"audio/Sound2.mp3",
+	"audio/Sound3.mp3",
+	"audio/Sound4.mp3"
 ];
 
 _soundUrls.forEach(sndPath => {
@@ -66,7 +66,8 @@ _console.pads.forEach(pad => {
 
 const startGame = () => {
 	blink("--", () => {
-		newColor()
+		newColor();
+		playSequence();
 	})
 }
 
@@ -84,10 +85,40 @@ const newColor = () => {
 }
 
 const playSequence = () => {
+	let counter = 0,
+		padOn = true
 
+	_data.playerSequence = [];
+	_data.playerCanPlay = false;
+
+	const interval = setInterval(() => {
+		if(!_data.gameOn){
+			clearInterval(interval);
+			disablePads();
+			return
+		}
+		if(padOn){
+			if(counter === _data.gameSequence.length){
+				clearInterval(interval);
+				disablePads();
+				waitForPlayerClick();
+				_data.playerCanPlay = true;
+				return
+			}
+			const sndId = _data.gameSequence[counter];
+			const pad = _console.pads[sndId];
+
+			_data.sounds[sndId].play();
+			pad.classList.add("game_pad--active");
+			counter++;
+		} else{
+			disablePads();
+		}
+		padOn = !padOn;
+	}, 750)
 }
 
-//text é o que aparece enquanto pisca e callback a funcao que vai ser executada apos
+//text aparece enquanto pisca e callback a funcao que vai ser executada apos
 const blink = (text, callback) => {
 	let counter = 0,
 		on = true;
@@ -95,6 +126,11 @@ const blink = (text, callback) => {
 	_console.counter.innerHTML = text;
 
 	const interval = setInterval(() => {
+		if(!_data.gameOn){
+			clearInterval(interval);
+			_console.counter.classList.remove("console_counter--on");
+			return;
+		}
 		if(on) {
 			_console.counter.classList.remove("console_counter--on")
 		}else {
@@ -109,7 +145,15 @@ const blink = (text, callback) => {
 }
 
 const waitForPlayerClick = () => {
+	clearTimeout(_data.timeout);
 
+	_data.timeout = setTimeout(() => {
+		if(!_data.playerCanPlay)
+			return
+	
+		disablePads();
+		playSequence();
+	}, 5000)
 }
 
 const resetOrPlayAgain = () => {
